@@ -48,17 +48,18 @@ def forward_model(X,y):
     # 변수 1~10개 : 0-9 -> 1-10
     for i in range(1,len(X,columns.difference(['const']))+1):
     	Forward_result = forward(X=X,y=y,predictors=predictors)
-        if i > 1 :
+    	if i > 1:
             if Forward_result["AIC"] > Fmodel_before:
                 break
-        Fmodels.loc[i] = Forward_result
-        predictors = Fmodels.loc[i]["model"].model.exog_names
-        Fmodel_before = Fmodels.loc[i]["AIC"]
-        predictors = [k for k in predictors if k != 'const']
+    	Fmodels.loc[i] = Forward_result
+    	predictors = Fmodels.loc[i]["model"].model.exog_names
+    	Fmodel_before = Fmodels.loc[i]["AIC"]
+    	predictors = [k for k in predictors if k != 'const']
     toc = time.time()
     print("Total elapsed time:",(toc-tic), "seconds.")
     
     return (Fmodels['model'][len(Fmodels['model'])])
+    
 
 	
 # 후진소거법
@@ -81,27 +82,27 @@ def backward(X,y,predictors):
 
 
 def backward_model(X,y) :
-    Bmodels = pd.DataFrame(columns=["AIC","model"], index = range(1,len(X.columns))
+    Bmodels = pd.DataFrame(columns=["AIC","model"], index = range(1,len(X.columns)))
     tic = time.time()
     predictors = X.columns.difference(['const'])
     Bmodel_before = processSubset(X,y,predictors)['AIC']
     while (len(predictors) > 1):
     	Backward_result = backward(X=train_x, y= train_y, predictors=predictors)
-        if Backward_result['AIC'] > Bmodel_before :
+    	if Backward_result['AIC'] > Bmodel_before :
         	break
-        Bmodels.loc[len(predictors) -1] = Backward_result
-        predictors = Bmodel.loc[len(predictors) - 1]['model'].model.exog_names
-        Bmodel_before = Backward_result["AIC"]
-        predictors = [k for k in predictors if k != 'const']
+    	Bmodels.loc[len(predictors) -1] = Backward_result
+    	predictors = Bmodel.loc[len(predictors) - 1]['model'].model.exog_names
+    	Bmodel_before = Backward_result["AIC"]
+    	predictors = [k for k in predictors if k != 'const']
     
     toc = time.time()
     print("Total elapsed time:",(toc-tic),"seconds.")
-    return (Bmodels["model"].dropna().iloc[0]
-    
+    return (Bmodels["model"].dropna().iloc[0])
+
 
 
 # 단계적 선택법
-def Stepwise_model(X,y):
+def stepwise_model(X,y):
     Stepmodels = pd.DataFrame(columns=["AIC", "model"])
     tic = time.time()
     predictors = []
