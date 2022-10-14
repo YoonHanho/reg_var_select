@@ -2,8 +2,16 @@
 # https://github.com/ADPclass/ADP_book_ver01/ >> 7장 5절 회귀분석
 # https://bit.ly/3CqoRoY
 
+import pandas as pd
+import numpy as np
+
+import statsmodels.api as sm 
+import statsmodels.formula.api as smf 
+
 import time
 import itertools
+
+
 def processSubset(X,y, feature_set):
             model = sm.OLS(y,X[list(feature_set)]) # Modeling
             regr = model.fit() # 모델 학습
