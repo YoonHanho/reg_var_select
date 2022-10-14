@@ -1,6 +1,9 @@
 # 회귀분석 변수선택 파이썬 코드 : ADP 파이썬 교재 
-# https://github.com/ADPclass/ADP_book_ver01/ >> 7장 5절 회귀분석
+# https://github.com/ADPclass/ADP_book_ver01/ >> 7장 5절 회귀분석 
 # https://bit.ly/3CqoRoY
+# 교재에 forward, backward 추가 코드 누락
+# 제대로된 설명 : https://todayisbetterthanyesterday.tistory.com/10
+
 
 import pandas as pd
 import numpy as np
@@ -31,7 +34,32 @@ def forward(X, y, predictors):
     best_model = models.loc[models['AIC'].argmin()] # index
     print("Processed ", models.shape[0], "models on", len(predictors)+1, "predictors in")
     print('Selected predictors:',best_model['model'].model.exog_names,' AIC:',best_model[0] )
-    return best_model
+    return best_model	
+
+
+def forward_model(X,y):
+
+    Fmodels = pd.DataFrame(columns=["AIC","model"])
+    tic = time.time()
+    
+    # 미리 정의된 데이터 변수
+    predictors = []
+    
+    # 변수 1~10개 : 0-9 -> 1-10
+    for i in range(1,len(X,columns.difference(['const']))+1):
+    	Forward_result = forward(X=X,y=y,predictors=predictors)
+        if i > 1 :
+            if Forward_result["AIC"] > Fmodel_before:
+                break
+        Fmodels.loc[i] = Forward_result
+        predictors = Fmodels.loc[i]["model"].model.exog_names
+        Fmodel_before = Fmodels.loc[i]["AIC"]
+        predictors = [k for k in predictors if k != 'const']
+    toc = time.time()
+    print("Total elapsed time:",(toc-tic), "seconds.")
+    
+    return (Fmodels['model'][len(Fmodels['model'])])
+
 	
 # 후진소거법
 def backward(X,y,predictors):
@@ -50,7 +78,28 @@ def backward(X,y,predictors):
     print('Selected predictors:',best_model['model'].model.exog_names,         'AIC:',best_model[0] )
 
     return best_model	
-	
+
+
+def backward_model(X,y) :
+    Bmodels = pd.DataFrame(columns=["AIC","model"], index = range(1,len(X.columns))
+    tic = time.time()
+    predictors = X.columns.difference(['const'])
+    Bmodel_before = processSubset(X,y,predictors)['AIC']
+    while (len(predictors) > 1):
+    	Backward_result = backward(X=train_x, y= train_y, predictors=predictors)
+        if Backward_result['AIC'] > Bmodel_before :
+        	break
+        Bmodels.loc[len(predictors) -1] = Backward_result
+        predictors = Bmodel.loc[len(predictors) - 1]['model'].model.exog_names
+        Bmodel_before = Backward_result["AIC"]
+        predictors = [k for k in predictors if k != 'const']
+    
+    toc = time.time()
+    print("Total elapsed time:",(toc-tic),"seconds.")
+    return (Bmodels["model"].dropna().iloc[0]
+    
+
+
 # 단계적 선택법
 def Stepwise_model(X,y):
     Stepmodels = pd.DataFrame(columns=["AIC", "model"])
